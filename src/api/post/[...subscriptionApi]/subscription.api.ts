@@ -2,10 +2,9 @@
 
 import axios from 'axios';
 
-import dotenv from 'dotenv';
-dotenv.config();
+//
 
-const API_URL = process.env.DEV_URL;
+const API_URL = 'http://10.0.2.2:3000/api/v1';
 export const createSubscription = (
   appName: string,
   category: string,
