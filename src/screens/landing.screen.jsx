@@ -9,9 +9,15 @@ import {
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const LandingScreen = () => {
   const navigate = useNavigation();
+
+  const token = AsyncStorage.getItem("token");
+  if (token) {
+    navigate.replace("MainTabs")
+  }
 
   return (
     <SafeAreaView className="flex-1 min-h-screen justify-center items-center bg-black">

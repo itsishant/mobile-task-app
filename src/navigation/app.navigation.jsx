@@ -14,7 +14,7 @@ export const MainTabs = () => {
   screenOptions={{
     headerShown: false,
     tabBarStyle: { backgroundColor: "#000" },
-    tabBarActiveTintColor: "#3B82F6",
+    tabBarActiveTintColor: "#3CB371",
     tabBarInactiveTintColor: "#888",
   }}
     >
