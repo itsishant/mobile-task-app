@@ -1,5 +1,5 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { Image } from 'react-native';
 import { TextInput } from 'react-native';
 import { Text } from 'react-native';
@@ -11,8 +11,11 @@ import { useNavigation } from '@react-navigation/native';
 export const OtpScreen = () => {
   const [otp, setOtp] = useState('');
   const navigate = useNavigation();
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleVerification = async () => {
+    setLoading(true);
     try {
       const userId = await AsyncStorage.getItem('userId');
       const response = await verifyOTP(userId, otp);
@@ -20,10 +23,13 @@ export const OtpScreen = () => {
       if (response?.success) {
         console.log('OTP verified successfully');
         navigate.navigate('Home');
+      } else {
+        setErrorMessage(response?.message || 'Invalid OTP. Please try again');
       }
     } catch (error) {
       console.log(`Error while verifying OTP: ${error}`);
     }
+    setLoading(false);
   };
 
   return (
@@ -40,11 +46,29 @@ export const OtpScreen = () => {
           placeholder="Enter your OTP"
           className="bg-neutral-900 border border-gray-700 text-neutral-100 rounded-2xl mb-2 px-6 py-4 w-80 mt-4"
         ></TextInput>
+        {errorMessage ? (
+          <Text
+            style={{ color: '#FF3333', fontFamily: 'Poppins-Regular' }}
+            className="text-sm"
+          >
+            {errorMessage}
+          </Text>
+        ) : null}
         <TouchableOpacity
           onPress={handleVerification}
           className="rounded-full bg-blue-700 tracking-wide px-32 py-3 mb-4"
+          disabled={loading}
         >
-          <Text className="text-xl text-neutral-200 font-medium">Submit</Text>
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text
+              style={{ fontFamily: 'Poppins-Regular' }}
+              className="text-xl text-neutral-200 font-medium"
+            >
+              Submit
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>

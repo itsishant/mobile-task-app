@@ -1,11 +1,12 @@
 'use client';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 //
 
 const API_URL = 'http://10.0.2.2:3000/api/v1';
-export const createSubscription = (
+export const createSubscription = async (
   appName: string,
   category: string,
   planType: string,
@@ -18,10 +19,10 @@ export const createSubscription = (
   remindaerDaysBefore: string,
 ) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = await AsyncStorage.getItem('token');
 
     if (!token) {
-      console.error('No token found in localStorage');
+      console.error('No token found in AsyncStorage');
       throw new Error('Authentication token not found. Please log in again.');
     }
 
