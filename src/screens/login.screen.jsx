@@ -105,7 +105,7 @@ export const LoginScreen = () => {
             <Text
               style={{ fontFamily: 'Poppins-Regular' }}
               className="text-blue-400 text-sm ml-1"
-            >   
+            >
               Sign up
             </Text>
           </TouchableOpacity>

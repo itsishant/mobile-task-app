@@ -20,18 +20,31 @@ import { DeleteSubscription } from '../api/delete/[...subscriptionApi]/subscript
 import { EditSubscription } from '../api/put/[...subscriptionApi]/subscription.api';
 
 const STATUS_COLORS = {
-  Active: { bg: 'rgba(16,185,129,0.1)', text: '#34d399' },      
-  Inactive: { bg: 'rgba(253,224,71,0.1)', text: '#fde047' },    
-  Paused: { bg: 'rgba(56,189,248,0.1)', text: '#38bdf8' },      
-  Cancelled: { bg: 'rgba(251,113,133,0.1)', text: '#fb7185' },  
+  Active: { bg: 'rgba(16,185,129,0.1)', text: '#34d399' },
+  Inactive: { bg: 'rgba(253,224,71,0.1)', text: '#fde047' },
+  Paused: { bg: 'rgba(56,189,248,0.1)', text: '#38bdf8' },
+  Cancelled: { bg: 'rgba(251,113,133,0.1)', text: '#fb7185' },
   Default: { bg: 'rgba(156,163,175,0.1)', text: '#9ca3af' },
 };
 
-const formatDate = (dateString) => {
+const formatDate = dateString => {
   if (!dateString) return 'N/A';
   try {
     const date = new Date(dateString);
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
     const day = String(date.getDate()).padStart(2, '0');
     const month = months[date.getMonth()];
     const year = date.getFullYear();
@@ -113,7 +126,10 @@ export const HomeScreen = () => {
 
   const handleAddOrEdit = async () => {
     setError('');
-    if (!formData.subscriptionDetails.appName || !formData.billingDetails.amount) {
+    if (
+      !formData.subscriptionDetails.appName ||
+      !formData.billingDetails.amount
+    ) {
       setError('App name and amount are required');
       return;
     }
@@ -122,7 +138,9 @@ export const HomeScreen = () => {
         const response = await EditSubscription(editingId, formData);
         if (!response || !response.data) throw new Error('Failed to update');
         setSubscriptions(subs =>
-          subs.map(sub => (sub._id === editingId ? { ...formData, _id: editingId } : sub))
+          subs.map(sub =>
+            sub._id === editingId ? { ...formData, _id: editingId } : sub,
+          ),
         );
       } else {
         const response = await createSubscription(
@@ -171,16 +189,21 @@ export const HomeScreen = () => {
     const statusColor = STATUS_COLORS[item.status] || STATUS_COLORS.Default;
     return (
       <View
+        className="border-neutral-500"
         style={{
-          backgroundColor: 'rgba(23,23,23,0.8)',
-          borderColor: '#27272a',
-          borderWidth: 1,
+          borderWidth: 0.6,
           borderRadius: 16,
           padding: 18,
           marginBottom: 16,
         }}
       >
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: 12,
+          }}
+        >
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
             <View
               style={{
@@ -194,15 +217,34 @@ export const HomeScreen = () => {
                 justifyContent: 'center',
               }}
             >
-              <Text style={{ color: '#d4d4d8', fontWeight: 'bold', fontSize: 18 }}>
-                {item.subscriptionDetails.appName?.charAt(0)?.toUpperCase() || '?'}
+              <Text
+                style={{
+                  color: '#d4d4d8',
+                  fontFamily: 'Poppins-Regular',
+                  fontSize: 18,
+                }}
+              >
+                {item.subscriptionDetails.appName?.charAt(0)?.toUpperCase() ||
+                  '?'}
               </Text>
             </View>
             <View>
-              <Text style={{ color: '#e5e5e5', fontWeight: 'bold', fontSize: 16 }}>
+              <Text
+                style={{
+                  color: '#e5e5e5',
+                  fontFamily: 'Poppins-Regular',
+                  fontSize: 16,
+                }}
+              >
                 {item.subscriptionDetails.appName}
               </Text>
-              <Text style={{ color: '#a3a3a3', fontSize: 12 }}>
+              <Text
+                style={{
+                  color: '#a3a3a3',
+                  fontSize: 12,
+                  fontFamily: 'Poppins-Regular',
+                }}
+              >
                 {item.subscriptionDetails.category}
               </Text>
             </View>
@@ -216,46 +258,132 @@ export const HomeScreen = () => {
               alignSelf: 'flex-start',
             }}
           >
-            <Text style={{ color: statusColor.text, fontWeight: 'bold', fontSize: 12 }}>
+            <Text
+              style={{
+                color: statusColor.text,
+                fontFamily: 'Poppins-Regular',
+                fontSize: 12,
+              }}
+            >
               {item.status}
             </Text>
           </View>
         </View>
         <View style={{ marginBottom: 12 }}>
-          <Text style={{ color: '#e5e5e5', fontSize: 22, fontWeight: 'bold' }}>
+          <Text
+            style={{
+              color: '#e5e5e5',
+              fontSize: 22,
+              fontFamily: 'Poppins-Regular',
+            }}
+          >
             {item.billingDetails.currency === 'USD'
               ? '$'
               : item.billingDetails.currency === 'EUR'
-              ? '€'
-              : item.billingDetails.currency === 'GBP'
-              ? '£'
-              : '₹'}
+                ? '€'
+                : item.billingDetails.currency === 'GBP'
+                  ? '£'
+                  : '₹'}
             {item.billingDetails.amount}
-            <Text style={{ color: '#a3a3a3', fontSize: 14, fontWeight: 'normal' }}>
+            <Text
+              style={{
+                color: '#a3a3a3',
+                fontSize: 14,
+                fontFamily: 'Poppins-Regular',
+              }}
+            >
               {' '}
               / {item.subscriptionDetails.planType?.toLowerCase()}
             </Text>
           </Text>
           {item.billingDetails.autoRenew && (
-            <Text style={{ color: '#a3a3a3', fontSize: 12, marginTop: 2 }}>Auto-renews</Text>
+            <Text style={{ color: '#a3a3a3', fontSize: 12, marginTop: 2 }}>
+              Auto-renews
+            </Text>
           )}
         </View>
-        <View style={{ borderBottomColor: '#27272a', borderBottomWidth: 1, marginBottom: 12 }} />
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
-          <Text style={{ color: '#a3a3a3', fontSize: 13 }}>Payment</Text>
-          <Text style={{ color: '#e5e5e5', fontSize: 13 }}>
+        <View
+          style={{
+            borderBottomColor: '#27272a',
+            borderBottomWidth: 1,
+            marginBottom: 12,
+          }}
+        />
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: 8,
+          }}
+        >
+          <Text
+            style={{
+              color: '#a3a3a3',
+              fontSize: 13,
+              fontFamily: 'Poppins-Regular',
+            }}
+          >
+            Payment
+          </Text>
+          <Text
+            style={{
+              color: '#e5e5e5',
+              fontSize: 13,
+              fontFamily: 'Poppins-Regular',
+            }}
+          >
             {item.billingDetails.paymentMethod}
           </Text>
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
-          <Text style={{ color: '#a3a3a3', fontSize: 13 }}>Next billing</Text>
-          <Text style={{ color: '#e5e5e5', fontSize: 13 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: 8,
+          }}
+        >
+          <Text
+            style={{
+              color: '#a3a3a3',
+              fontSize: 13,
+              fontFamily: 'Poppins-Regular',
+            }}
+          >
+            Next billing
+          </Text>
+          <Text
+            style={{
+              color: '#e5e5e5',
+              fontSize: 13,
+              fontFamily: 'Poppins-Regular',
+            }}
+          >
             {formatDate(item.datesDetails.nextBillingDate)}
           </Text>
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
-          <Text style={{ color: '#a3a3a3', fontSize: 13 }}>Reminder</Text>
-          <Text style={{ color: '#e5e5e5', fontSize: 13 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: 8,
+          }}
+        >
+          <Text
+            style={{
+              color: '#a3a3a3',
+              fontSize: 13,
+              fontFamily: 'Poppins-Regular',
+            }}
+          >
+            Reminder
+          </Text>
+          <Text
+            style={{
+              color: '#e5e5e5',
+              fontSize: 13,
+              fontFamily: 'Poppins-Regular',
+            }}
+          >
             {item.reminderDaysBefore}d before
           </Text>
         </View>
@@ -271,7 +399,15 @@ export const HomeScreen = () => {
             }}
             onPress={() => handleEditClick(item)}
           >
-            <Text style={{ color: '#e5e5e5', fontSize: 13, fontWeight: 'bold' }}>Edit</Text>
+            <Text
+              style={{
+                color: '#e5e5e5',
+                fontSize: 13,
+                fontFamily: 'Poppins-Regular',
+              }}
+            >
+              Edit
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{
@@ -283,7 +419,15 @@ export const HomeScreen = () => {
             }}
             onPress={() => handleDelete(item._id)}
           >
-            <Text style={{ color: '#fb7185', fontSize: 13, fontWeight: 'bold' }}>Delete</Text>
+            <Text
+              style={{
+                color: '#fb7185',
+                fontSize: 13,
+                fontFamily: 'Poppins-Regular',
+              }}
+            >
+              Delete
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -293,13 +437,28 @@ export const HomeScreen = () => {
   return (
     <View style={{ flex: 1, backgroundColor: '#09090b' }}>
       <SafeAreaView edges={['top']} style={{ backgroundColor: '#000' }}>
-        <View style={{ paddingVertical: 24, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#000', paddingHorizontal: 16 }}>
+        <View
+          style={{
+            paddingVertical: 24,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            backgroundColor: '#000',
+            paddingHorizontal: 16,
+          }}
+        >
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
             <Image
               source={require('../../public/logo.png')}
               style={{ width: 40, height: 40 }}
             />
-            <Text style={{ fontFamily: 'Poppins-Regular', fontSize: 24, color: '#e5e5e5' }}>
+            <Text
+              style={{
+                fontFamily: 'Poppins-Regular',
+                fontSize: 24,
+                color: '#e5e5e5',
+              }}
+            >
               Loopify
             </Text>
           </View>
@@ -308,7 +467,11 @@ export const HomeScreen = () => {
               name="logout"
               size={30}
               color="#fff"
-              style={{ backgroundColor: '#b91c1c', borderRadius: 20, padding: 6 }}
+              style={{
+                backgroundColor: '#b91c1c',
+                borderRadius: 20,
+                padding: 6,
+              }}
             />
           </TouchableOpacity>
         </View>
@@ -316,8 +479,24 @@ export const HomeScreen = () => {
 
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         {showForm && (
-          <View style={{ backgroundColor: '#18181b', borderRadius: 16, padding: 16, marginBottom: 16, borderColor: '#27272a', borderWidth: 1 }}>
-            <Text style={{ color: '#fff', fontSize: 20, marginBottom: 12, fontFamily: 'Poppins-Bold' }}>
+          <View
+            style={{
+              backgroundColor: '#18181b',
+              borderRadius: 16,
+              padding: 16,
+              marginBottom: 16,
+              borderColor: '#27272a',
+              borderWidth: 1,
+            }}
+          >
+            <Text
+              style={{
+                color: '#fff',
+                fontSize: 20,
+                marginBottom: 12,
+                fontFamily: 'Poppins-Poppins-Regular',
+              }}
+            >
               {editingId ? 'Edit Subscription' : 'New Subscription'}
             </Text>
             {error ? (
@@ -327,31 +506,55 @@ export const HomeScreen = () => {
               placeholder="App Name"
               placeholderTextColor="#a3a3a3"
               value={formData.subscriptionDetails.appName}
-              onChangeText={text => handleInputChange('subscriptionDetails', 'appName', text)}
-              style={{ backgroundColor: '#27272a', color: '#fff', borderRadius: 8, padding: 10, marginBottom: 8 }}
+              onChangeText={text =>
+                handleInputChange('subscriptionDetails', 'appName', text)
+              }
+              style={{
+                backgroundColor: '#27272a',
+                color: '#fff',
+                borderRadius: 8,
+                padding: 10,
+                marginBottom: 8,
+              }}
             />
 
             <View style={{ marginBottom: 8 }}>
-              <Text style={{ color: '#a3a3a3', fontSize: 12, marginBottom: 4 }}>Category</Text>
+              <Text style={{ color: '#a3a3a3', fontSize: 12, marginBottom: 4 }}>
+                Category
+              </Text>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                {['Productivity', 'Education', 'Entertainment', 'Utility', 'Other'].map(cat => (
+                {[
+                  'Productivity',
+                  'Education',
+                  'Entertainment',
+                  'Utility',
+                  'Other',
+                ].map(cat => (
                   <TouchableOpacity
                     key={cat}
                     style={{
-                      backgroundColor: formData.subscriptionDetails.category === cat ? '#34d399' : '#27272a',
+                      backgroundColor:
+                        formData.subscriptionDetails.category === cat
+                          ? '#34d399'
+                          : '#27272a',
                       borderRadius: 6,
                       paddingHorizontal: 10,
                       paddingVertical: 6,
                       borderColor: '#444',
                       borderWidth: 1,
                     }}
-                    onPress={() => handleInputChange('subscriptionDetails', 'category', cat)}
+                    onPress={() =>
+                      handleInputChange('subscriptionDetails', 'category', cat)
+                    }
                   >
                     <Text
                       style={{
-                        color: formData.subscriptionDetails.category === cat ? '#000' : '#e5e5e5',
+                        color:
+                          formData.subscriptionDetails.category === cat
+                            ? '#000'
+                            : '#e5e5e5',
                         fontSize: 11,
-                        fontWeight: 'bold',
+                        fontFamily: 'Poppins-Regular',
                       }}
                     >
                       {cat}
@@ -362,27 +565,37 @@ export const HomeScreen = () => {
             </View>
 
             <View style={{ marginBottom: 8 }}>
-              <Text style={{ color: '#a3a3a3', fontSize: 12, marginBottom: 4 }}>Plan Type</Text>
+              <Text style={{ color: '#a3a3a3', fontSize: 12, marginBottom: 4 }}>
+                Plan Type
+              </Text>
               <View style={{ flexDirection: 'row', gap: 6 }}>
                 {['Monthly', 'Yearly', 'Free', 'Trial'].map(plan => (
                   <TouchableOpacity
                     key={plan}
                     style={{
                       flex: 1,
-                      backgroundColor: formData.subscriptionDetails.planType === plan ? '#34d399' : '#27272a',
+                      backgroundColor:
+                        formData.subscriptionDetails.planType === plan
+                          ? '#34d399'
+                          : '#27272a',
                       borderRadius: 6,
                       paddingVertical: 8,
                       alignItems: 'center',
                       borderColor: '#444',
                       borderWidth: 1,
                     }}
-                    onPress={() => handleInputChange('subscriptionDetails', 'planType', plan)}
+                    onPress={() =>
+                      handleInputChange('subscriptionDetails', 'planType', plan)
+                    }
                   >
                     <Text
                       style={{
-                        color: formData.subscriptionDetails.planType === plan ? '#000' : '#e5e5e5',
+                        color:
+                          formData.subscriptionDetails.planType === plan
+                            ? '#000'
+                            : '#e5e5e5',
                         fontSize: 11,
-                        fontWeight: 'bold',
+                        fontFamily: 'Poppins-Regular',
                       }}
                     >
                       {plan}
@@ -395,32 +608,50 @@ export const HomeScreen = () => {
               placeholder="Amount"
               placeholderTextColor="#a3a3a3"
               value={formData.billingDetails.amount}
-              onChangeText={text => handleInputChange('billingDetails', 'amount', text)}
+              onChangeText={text =>
+                handleInputChange('billingDetails', 'amount', text)
+              }
               keyboardType="numeric"
-              style={{ backgroundColor: '#27272a', color: '#fff', borderRadius: 8, padding: 10, marginBottom: 8 }}
+              style={{
+                backgroundColor: '#27272a',
+                color: '#fff',
+                borderRadius: 8,
+                padding: 10,
+                marginBottom: 8,
+              }}
             />
             <View style={{ marginBottom: 8 }}>
-              <Text style={{ color: '#a3a3a3', fontSize: 12, marginBottom: 4 }}>Currency</Text>
+              <Text style={{ color: '#a3a3a3', fontSize: 12, marginBottom: 4 }}>
+                Currency
+              </Text>
               <View style={{ flexDirection: 'row', gap: 6 }}>
                 {['USD', 'EUR', 'GBP', 'INR'].map(curr => (
                   <TouchableOpacity
                     key={curr}
                     style={{
                       flex: 1,
-                      backgroundColor: formData.billingDetails.currency === curr ? '#34d399' : '#27272a',
+                      backgroundColor:
+                        formData.billingDetails.currency === curr
+                          ? '#34d399'
+                          : '#27272a',
                       borderRadius: 6,
                       paddingVertical: 8,
                       alignItems: 'center',
                       borderColor: '#444',
                       borderWidth: 1,
                     }}
-                    onPress={() => handleInputChange('billingDetails', 'currency', curr)}
+                    onPress={() =>
+                      handleInputChange('billingDetails', 'currency', curr)
+                    }
                   >
                     <Text
                       style={{
-                        color: formData.billingDetails.currency === curr ? '#000' : '#e5e5e5',
+                        color:
+                          formData.billingDetails.currency === curr
+                            ? '#000'
+                            : '#e5e5e5',
                         fontSize: 11,
-                        fontWeight: 'bold',
+                        fontFamily: 'Poppins-Regular',
                       }}
                     >
                       {curr}
@@ -431,32 +662,48 @@ export const HomeScreen = () => {
             </View>
 
             <View style={{ marginBottom: 8 }}>
-              <Text style={{ color: '#a3a3a3', fontSize: 12, marginBottom: 4 }}>Payment Method</Text>
+              <Text style={{ color: '#a3a3a3', fontSize: 12, marginBottom: 4 }}>
+                Payment Method
+              </Text>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                {['Credit Card', 'Debit Card', 'PayPal', 'Upi', 'Other'].map(method => (
-                  <TouchableOpacity
-                    key={method}
-                    style={{
-                      backgroundColor: formData.billingDetails.paymentMethod === method ? '#34d399' : '#27272a',
-                      borderRadius: 6,
-                      paddingHorizontal: 10,
-                      paddingVertical: 6,
-                      borderColor: '#444',
-                      borderWidth: 1,
-                    }}
-                    onPress={() => handleInputChange('billingDetails', 'paymentMethod', method)}
-                  >
-                    <Text
+                {['Credit Card', 'Debit Card', 'PayPal', 'Upi', 'Other'].map(
+                  method => (
+                    <TouchableOpacity
+                      key={method}
                       style={{
-                        color: formData.billingDetails.paymentMethod === method ? '#000' : '#e5e5e5',
-                        fontSize: 10,
-                        fontWeight: 'bold',
+                        backgroundColor:
+                          formData.billingDetails.paymentMethod === method
+                            ? '#34d399'
+                            : '#27272a',
+                        borderRadius: 6,
+                        paddingHorizontal: 10,
+                        paddingVertical: 6,
+                        borderColor: '#444',
+                        borderWidth: 1,
                       }}
+                      onPress={() =>
+                        handleInputChange(
+                          'billingDetails',
+                          'paymentMethod',
+                          method,
+                        )
+                      }
                     >
-                      {method}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
+                      <Text
+                        style={{
+                          color:
+                            formData.billingDetails.paymentMethod === method
+                              ? '#000'
+                              : '#e5e5e5',
+                          fontSize: 10,
+                          fontFamily: 'Poppins-Regular',
+                        }}
+                      >
+                        {method}
+                      </Text>
+                    </TouchableOpacity>
+                  ),
+                )}
               </View>
             </View>
 
@@ -477,52 +724,95 @@ export const HomeScreen = () => {
                   width: 50,
                   height: 28,
                   borderRadius: 14,
-                  backgroundColor: formData.billingDetails.autoRenew ? '#34d399' : '#444',
+                  backgroundColor: formData.billingDetails.autoRenew
+                    ? '#34d399'
+                    : '#444',
                   justifyContent: 'center',
-                  alignItems: formData.billingDetails.autoRenew ? 'flex-end' : 'flex-start',
+                  alignItems: formData.billingDetails.autoRenew
+                    ? 'flex-end'
+                    : 'flex-start',
                   paddingHorizontal: 4,
                 }}
-                onPress={() => handleInputChange('billingDetails', 'autoRenew', !formData.billingDetails.autoRenew)}
+                onPress={() =>
+                  handleInputChange(
+                    'billingDetails',
+                    'autoRenew',
+                    !formData.billingDetails.autoRenew,
+                  )
+                }
               >
-                <View style={{ width: 24, height: 24, borderRadius: 12, backgroundColor: '#fff' }} />
+                <View
+                  style={{
+                    width: 24,
+                    height: 24,
+                    borderRadius: 12,
+                    backgroundColor: '#fff',
+                  }}
+                />
               </TouchableOpacity>
             </View>
             <TextInput
               placeholder="Start Date (YYYY-MM-DD)"
               placeholderTextColor="#a3a3a3"
               value={formData.datesDetails.startDate}
-              onChangeText={text => handleInputChange('datesDetails', 'startDate', text)}
-              style={{ backgroundColor: '#27272a', color: '#fff', borderRadius: 8, padding: 10, marginBottom: 8 }}
+              onChangeText={text =>
+                handleInputChange('datesDetails', 'startDate', text)
+              }
+              style={{
+                backgroundColor: '#27272a',
+                color: '#fff',
+                borderRadius: 8,
+                padding: 10,
+                marginBottom: 8,
+              }}
             />
             <TextInput
               placeholder="Next Billing Date (YYYY-MM-DD)"
               placeholderTextColor="#a3a3a3"
               value={formData.datesDetails.nextBillingDate}
-              onChangeText={text => handleInputChange('datesDetails', 'nextBillingDate', text)}
-              style={{ backgroundColor: '#27272a', color: '#fff', borderRadius: 8, padding: 10, marginBottom: 8 }}
+              onChangeText={text =>
+                handleInputChange('datesDetails', 'nextBillingDate', text)
+              }
+              style={{
+                backgroundColor: '#27272a',
+                color: '#fff',
+                borderRadius: 8,
+                padding: 10,
+                marginBottom: 8,
+              }}
             />
             <View style={{ marginBottom: 8 }}>
-              <Text style={{ color: '#a3a3a3', fontSize: 12, marginBottom: 4 }}>Reminder (Days Before)</Text>
+              <Text style={{ color: '#a3a3a3', fontSize: 12, marginBottom: 4 }}>
+                Reminder (Days Before)
+              </Text>
               <View style={{ flexDirection: 'row', gap: 6 }}>
                 {[1, 3, 7, 14, 30].map(day => (
                   <TouchableOpacity
                     key={day}
                     style={{
                       flex: 1,
-                      backgroundColor: formData.reminderDaysBefore === day ? '#34d399' : '#27272a',
+                      backgroundColor:
+                        formData.reminderDaysBefore === day
+                          ? '#34d399'
+                          : '#27272a',
                       borderRadius: 6,
                       paddingVertical: 8,
                       alignItems: 'center',
                       borderColor: '#444',
                       borderWidth: 1,
                     }}
-                    onPress={() => handleSimpleChange('reminderDaysBefore', day)}
+                    onPress={() =>
+                      handleSimpleChange('reminderDaysBefore', day)
+                    }
                   >
                     <Text
                       style={{
-                        color: formData.reminderDaysBefore === day ? '#000' : '#e5e5e5',
+                        color:
+                          formData.reminderDaysBefore === day
+                            ? '#000'
+                            : '#e5e5e5',
                         fontSize: 10,
-                        fontWeight: 'bold',
+                        fontFamily: 'Poppins-Regular',
                       }}
                     >
                       {day}d
@@ -533,14 +823,17 @@ export const HomeScreen = () => {
             </View>
 
             <View style={{ marginBottom: 8 }}>
-              <Text style={{ color: '#a3a3a3', fontSize: 12, marginBottom: 4 }}>Status</Text>
+              <Text style={{ color: '#a3a3a3', fontSize: 12, marginBottom: 4 }}>
+                Status
+              </Text>
               <View style={{ flexDirection: 'row', gap: 6 }}>
                 {['Active', 'Inactive', 'Paused', 'Cancelled'].map(stat => (
                   <TouchableOpacity
                     key={stat}
                     style={{
                       flex: 1,
-                      backgroundColor: formData.status === stat ? '#34d399' : '#27272a',
+                      backgroundColor:
+                        formData.status === stat ? '#34d399' : '#27272a',
                       borderRadius: 6,
                       paddingVertical: 8,
                       alignItems: 'center',
@@ -553,7 +846,7 @@ export const HomeScreen = () => {
                       style={{
                         color: formData.status === stat ? '#000' : '#e5e5e5',
                         fontSize: 10,
-                        fontWeight: 'bold',
+                        fontFamily: 'Poppins-Regular',
                       }}
                     >
                       {stat}
@@ -572,7 +865,13 @@ export const HomeScreen = () => {
               }}
               onPress={handleAddOrEdit}
             >
-              <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 16 }}>
+              <Text
+                style={{
+                  color: '#000',
+                  fontFamily: 'Poppins-Regular',
+                  fontSize: 16,
+                }}
+              >
                 {editingId ? 'Update' : 'Save'}
               </Text>
             </TouchableOpacity>
@@ -589,19 +888,38 @@ export const HomeScreen = () => {
                 setFormData(initialFormData);
               }}
             >
-              <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>Cancel</Text>
+              <Text
+                style={{
+                  color: '#fff',
+                  fontFamily: 'Poppins-Regular',
+                  fontSize: 16,
+                }}
+              >
+                Cancel
+              </Text>
             </TouchableOpacity>
           </View>
         )}
 
         {loading ? (
-          <ActivityIndicator color="#fff" size="large" style={{ marginTop: 32 }} />
+          <ActivityIndicator
+            color="#fff"
+            size="large"
+            style={{ marginTop: 32 }}
+          />
         ) : subscriptions.length === 0 ? (
           <View style={{ alignItems: 'center', marginTop: 64 }}>
             <Text style={{ color: '#e5e5e5', fontSize: 18, marginBottom: 8 }}>
               No active subscriptions
             </Text>
-            <Text style={{ color: '#a3a3a3', fontSize: 14, marginBottom: 16, textAlign: 'center' }}>
+            <Text
+              style={{
+                color: '#a3a3a3',
+                fontSize: 14,
+                marginBottom: 16,
+                textAlign: 'center',
+              }}
+            >
               Track and manage all your subscriptions in one place
             </Text>
             <TouchableOpacity
@@ -614,13 +932,21 @@ export const HomeScreen = () => {
               }}
               onPress={() => setShowForm(true)}
             >
-              <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 16 }}>Add Subscription</Text>
+              <Text
+                style={{
+                  color: '#000',
+                  fontFamily: 'Poppins-Regular',
+                  fontSize: 16,
+                }}
+              >
+                Add Subscription
+              </Text>
             </TouchableOpacity>
           </View>
         ) : (
           <>
             <TouchableOpacity
-            className='bg-neutral-300'
+              className="bg-neutral-300 flex justify-center items-center"
               style={{
                 borderRadius: 12,
                 paddingVertical: 12,
@@ -634,12 +960,19 @@ export const HomeScreen = () => {
                 setShowForm(true);
               }}
             >
-              <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 16 }}>Create Subscription</Text>
+              <Text
+                className="text-black"
+                style={{ fontFamily: 'Poppins-Regular', fontSize: 16 }}
+              >
+                Create Subscription
+              </Text>
             </TouchableOpacity>
             <FlatList
               data={subscriptions}
               renderItem={renderSubscription}
-              keyExtractor={item => item._id?.toString() || Math.random().toString()}
+              keyExtractor={item =>
+                item._id?.toString() || Math.random().toString()
+              }
               contentContainerStyle={{ paddingBottom: 32 }}
             />
           </>

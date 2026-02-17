@@ -15,9 +15,10 @@ export const EditSubscription = async (id: string, data: any) => {
       subscriptionDetails: data.subscriptionDetails || {},
       billingDetails: {
         ...data.billingDetails,
-        amount: typeof data.billingDetails?.amount === 'string'
-          ? parseFloat(data.billingDetails.amount)
-          : data.billingDetails?.amount,
+        amount:
+          typeof data.billingDetails?.amount === 'string'
+            ? parseFloat(data.billingDetails.amount)
+            : data.billingDetails?.amount,
       },
       datesDetails: data.datesDetails || {},
       reminderDaysBefore: data.reminderDaysBefore,
