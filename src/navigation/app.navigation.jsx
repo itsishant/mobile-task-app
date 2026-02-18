@@ -4,6 +4,7 @@ import { SignupScreen } from '../screens/signup.screen.jsx';
 import { LoginScreen } from '../screens/login.screen.jsx';
 import { HomeScreen } from '../screens/home.screen.jsx';
 import { OtpScreen } from '../screens/otp.screen.jsx';
+import { SearchScreen } from '../screens/search.screen.jsx';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -27,6 +28,16 @@ export const MainTabs = () => {
         name="Home"
         component={HomeScreen}
       />
+
+      <Tab.Screen 
+      options={{
+        tabBarIcon: ({color, size}) => (
+          <Ionicons name="search" size={size} color={color} />
+        )
+      }}
+      name="Search"
+      component={SearchScreen}
+      />
     </Tab.Navigator>
   );
 };
@@ -41,6 +52,7 @@ export const AppNaviagtion = () => {
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Otp" component={OtpScreen} />
+      <Stack.Screen name="Search" component={SearchScreen} />
       <Stack.Screen name="MainTabs" component={MainTabs} />
     </Stack.Navigator>
   );
