@@ -10,6 +10,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { LoginUser } from '../api/post/[...loginApi]/login.api';
+import { Screen } from 'react-native-screens';
 
 export const LoginScreen = () => {
   const navigate = useNavigation();

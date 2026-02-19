@@ -1,13 +1,16 @@
 import './global.css';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { AppNaviagtion } from './src/navigation/app.navigation.jsx';
+import {  AppNavigation } from './src/navigation/app.navigation.jsx';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <AppNaviagtion />
-    </NavigationContainer>
+     <SafeAreaProvider>
+      <NavigationContainer>
+        <AppNavigation />
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 };
 

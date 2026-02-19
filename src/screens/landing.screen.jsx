@@ -18,7 +18,9 @@ export const LandingScreen = () => {
     const checkToken = async () => {
       const token = await AsyncStorage.getItem('token');
       if (token) {
-        navigate.replace('MainTabs');
+        navigate.replace('MainTabs', {
+          screen: "Search"
+        });
       }
     };
     checkToken();
