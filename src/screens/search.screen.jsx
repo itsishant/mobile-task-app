@@ -13,5 +13,6 @@ export const SearchScreen = () => {
               placeholderTextColor="#a3a3a3"/>
             </View>
         </SafeAreaView>
+        
     )
 }
