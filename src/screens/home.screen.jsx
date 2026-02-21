@@ -101,15 +101,13 @@ export const HomeScreen = () => {
 
   const handleLogout = async () => {
     try {
-      await AsyncStorage.removeItem('token');
-      await AsyncStorage.removeItem('userId');
-      await AsyncStorage.removeItem('email');
-      navigate.navigate('Landing');
+      await AsyncStorage.multiRemove(['token', 'userId', 'email']);
+      const token = await AsyncStorage.getItem('token');
+      navigate.reset({ index: 0, routes: [{ name: 'Landing' }] });
     } catch (error) {
-      console.log(`Error during logout: ${error}`);
+      console.log('Error during logout:', error);
     }
   };
-
   const handleInputChange = (section, key, value) => {
     setFormData(prev => ({
       ...prev,

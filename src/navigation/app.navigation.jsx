@@ -4,6 +4,7 @@ import { SignupScreen } from '../screens/signup.screen.jsx';
 import { LoginScreen } from '../screens/login.screen.jsx';
 import { OtpScreen } from '../screens/otp.screen.jsx';
 import { HomeScreen } from '../screens/home.screen.jsx';
+import { ProfileScreen } from '../screens/profile.screen.jsx';
 import { SearchScreen } from '../screens/search.screen.jsx';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -40,6 +41,17 @@ export const MainTabs = () => {
           ),
         }}
       />
+
+      <Tab.Screen 
+      name="Profile"
+      component={ProfileScreen}
+      options={{
+        tabBarIcon: ({ color, size }) => (
+          <Ionicons name="person" size={size} color={color} />
+        )
+      }}
+      />
+
     </Tab.Navigator>
   );
 };

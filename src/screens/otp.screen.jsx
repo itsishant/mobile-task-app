@@ -22,7 +22,7 @@ export const OtpScreen = () => {
 
       if (response?.success) {
         console.log('OTP verified successfully');
-        navigate.navigate('Home');
+        navigate.navigate('MainTabs');
       } else {
         setErrorMessage(response?.message || 'Invalid OTP. Please try again');
       }

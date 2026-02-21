@@ -26,7 +26,9 @@ export const LoginScreen = () => {
       const response = await LoginUser(email, password);
 
       if (response?.success) {
-        navigate.replace('MainTabs');
+        navigate.replace('MainTabs', {
+          screen: 'Search',
+        });
       } else {
         setErrorMessage(response?.message || 'Invalid email or password');
       }
