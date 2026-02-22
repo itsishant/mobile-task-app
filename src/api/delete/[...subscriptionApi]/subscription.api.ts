@@ -3,7 +3,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //
 
-const API_URL = 'http://10.0.2.2:3000/api/v1';
+import appConfig from '../../../config/app.config';
+
+const API_URL = appConfig.DEV_URL;
 export const DeleteSubscription = async (id: string) => {
   try {
     const token = await AsyncStorage.getItem('token');

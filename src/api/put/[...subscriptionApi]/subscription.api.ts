@@ -1,16 +1,22 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-const API_URL = 'http://10.0.2.2:3000/api/v1';
+import appConfig from '../../../config/app.config';
+
+const API_URL = appConfig.DEV_URL;
 export const EditSubscription = async (id: string, data: any) => {
   try {
+    // Validate MongoDB ObjectId format (24 hex characters)
+    if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
+      throw new Error(`Invalid subscription ID format: ${id}`);
+    }
+
     const token = await AsyncStorage.getItem('token');
 
     if (!token) {
       throw new Error('Authentication token not found. Please log in again.');
     }
 
-    // Ensure amount is a number
     const formattedData = {
       subscriptionDetails: data.subscriptionDetails || {},
       billingDetails: {

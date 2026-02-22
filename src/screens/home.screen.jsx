@@ -135,11 +135,6 @@ export const HomeScreen = () => {
       if (editingId) {
         const response = await EditSubscription(editingId, formData);
         if (!response || !response.data) throw new Error('Failed to update');
-        setSubscriptions(subs =>
-          subs.map(sub =>
-            sub._id === editingId ? { ...formData, _id: editingId } : sub,
-          ),
-        );
       } else {
         const response = await createSubscription(
           formData.subscriptionDetails.appName,
@@ -155,11 +150,11 @@ export const HomeScreen = () => {
           formData.status,
         );
         if (!response || !response.data) throw new Error('Failed to save');
-        setSubscriptions(subs => [
-          ...subs,
-          { ...formData, _id: response.data._id || Date.now().toString() },
-        ]);
       }
+      
+      // Refresh subscriptions from backend to get correct MongoDB ObjectIds
+      await fetchSubscriptions();
+      
       setFormData(initialFormData);
       setShowForm(false);
       setEditingId(null);

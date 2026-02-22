@@ -17,12 +17,10 @@ export const LandingScreen = () => {
   useEffect(() => {
     const checkToken = async () => {
       const token = await AsyncStorage.getItem('token');
-
-      // Fix the screen it navigates to the searach for testing
       if (token) {
         console.log('token: ', token);
         navigate.replace('MainTabs', {
-          screen: 'Profile',
+          screen: 'Home',
         });
       }
     };

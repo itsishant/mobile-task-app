@@ -31,6 +31,7 @@ export const LoginScreen = () => {
         });
       } else {
         setErrorMessage(response?.message || 'Invalid email or password');
+        console.log(response?.message);
       }
     } catch (error) {
       console.log('LOGIN ERROR:', error);
