@@ -26,7 +26,7 @@ export const SignupScreen = () => {
 
       if (response?.success) {
         console.log(response);
-        navigate.navigate('Otp');
+        navigate.navigate('MainTabs');
       } else {
         setErrorMessage(response?.message || 'Signup failed. Please try again');
       }
