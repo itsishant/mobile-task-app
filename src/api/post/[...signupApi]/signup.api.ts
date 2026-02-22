@@ -6,6 +6,7 @@ import axios from 'axios';
 import appConfig from '../../../config/app.config';
 
 const API_URL = appConfig.DEV_URL;
+
 export const createUser = async (email: string, password: string) => {
   try {
     const response = await axios.post(`${API_URL}/signup/create-user`, {

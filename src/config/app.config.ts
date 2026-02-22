@@ -5,9 +5,10 @@ interface AppConfig {
 }
 
 const getConfig = (): AppConfig => {
+//https://loopify-fcbl.onrender.com/api/v1
 
   return {
-    DEV_URL: Config.DEV_URL || 'http://10.0.2.2:3000/api/v1'
+    DEV_URL: 'https://loopify-fcbl.onrender.com/api/v1'
   };
 };
 
