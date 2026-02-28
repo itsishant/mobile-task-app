@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, ScrollView, Image, ActivityIndicator } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView, Image, ActivityIndicator, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -12,6 +12,7 @@ export const ProfileScreen = () => {
   const [userId, setUserId] = useState('');
   const [subscriptions, setSubscriptions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showAccountInfo, setShowAccountInfo] = useState(false);
   const [stats, setStats] = useState(() => ({
     total: 0,
     active: 0,
@@ -146,18 +147,7 @@ export const ProfileScreen = () => {
               Profile
             </Text>
           </View>
-          <TouchableOpacity onPress={handleLogout}>
-            <Icon
-              name="logout"
-              size={30}
-              color="#fff"
-              style={{
-                backgroundColor: '#b91c1c',
-                borderRadius: 20,
-                padding: 6,
-              }}
-            />
-          </TouchableOpacity>
+
         </View>
       </SafeAreaView>
 
@@ -229,21 +219,62 @@ export const ProfileScreen = () => {
           <MenuItem
             icon="person"
             label="Account Information"
-            onPress={() => {}}
-          />
-          <MenuItem
-            icon="notifications"
-            label="Notifications"
-            onPress={() => {}}
-          />
-          <MenuItem icon="security" label="Privacy" onPress={() => {}} />
-          <MenuItem icon="help" label="Help & Support" onPress={() => {}} />
-          <MenuItem
-            icon="info"
-            label="About Loopify"
-            onPress={() => {}}
+            onPress={() => setShowAccountInfo(true)}
           />
         </View>
+
+        <Modal
+          visible={showAccountInfo}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setShowAccountInfo(false)}
+        >
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: 'rgba(0,0,0,0.7)',
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingHorizontal: 24,
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: '#18181b',
+                borderRadius: 20,
+                padding: 28,
+                width: '100%',
+                borderWidth: 1,
+                borderColor: '#3f3f46',
+              }}
+            >
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+                <Text style={{ color: '#e5e5e5', fontSize: 18, fontFamily: 'Poppins-Bold' }}>
+                  Account Information
+                </Text>
+                <TouchableOpacity onPress={() => setShowAccountInfo(false)}>
+                  <Icon name="close" size={24} color="#a3a3a3" />
+                </TouchableOpacity>
+              </View>
+              <View
+                style={{
+                  backgroundColor: '#09090b',
+                  borderRadius: 12,
+                  padding: 16,
+                  borderWidth: 1,
+                  borderColor: '#27272a',
+                }}
+              >
+                <Text style={{ color: '#a3a3a3', fontSize: 12, fontFamily: 'Poppins-Regular', marginBottom: 4 }}>
+                  Email Address
+                </Text>
+                <Text style={{ color: '#34d399', fontSize: 15, fontFamily: 'Poppins-Regular' }}>
+                  {email || 'No email found'}
+                </Text>
+              </View>
+            </View>
+          </View>
+        </Modal>
 
         <TouchableOpacity
           onPress={handleLogout}

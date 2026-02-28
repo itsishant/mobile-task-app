@@ -3,7 +3,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { GetSubscription } from "../api/get/[...subscriptionApi]/subscription.api";
 import { FlatList } from "react-native";
 
@@ -36,32 +36,29 @@ export const SearchScreen = () => {
   const navigation = useNavigation();
   const [subscriptions, setSubscriptions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
-  useEffect(() => {
-    const fetchSubscriptions = async () => {
-      setLoading(true);
-      try {
-        const data = await GetSubscription();
-        setSubscriptions(data || []);
-        setError('');
-      } catch (err) {
-        setError('Failed to load subscriptions');
-        setSubscriptions([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchSubscriptions();
+  const fetchSubscriptions = useCallback(async (isRefresh = false) => {
+    if (isRefresh) setRefreshing(true);
+    else setLoading(true);
+    try {
+      const data = await GetSubscription();
+      setSubscriptions(data || []);
+      setError('');
+    } catch (err) {
+      setError('Failed to load subscriptions');
+      setSubscriptions([]);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await AsyncStorage.multiRemove(['token', 'userId', 'email']);
-      navigation.reset({ index: 0, routes: [{ name: 'Landing' }] });
-    } catch (error) {}
-  };
+  useEffect(() => {
+    fetchSubscriptions();
+  }, [fetchSubscriptions]);
 
   const filteredSubscriptions = subscriptions.filter(sub =>
     sub.subscriptionDetails.appName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -342,17 +339,21 @@ export const SearchScreen = () => {
               Loopify
             </Text>
           </View>
-          <TouchableOpacity onPress={handleLogout}>
-            <Icon
-              name="logout"
-              size={30}
-              color="#fff"
-              style={{
-                backgroundColor: '#b91c1c',
-                borderRadius: 20,
-                padding: 6,
-              }}
-            />
+          <TouchableOpacity
+            onPress={() => fetchSubscriptions(true)}
+            style={{
+              backgroundColor: '#18181b',
+              borderRadius: 20,
+              padding: 8,
+              borderWidth: 1,
+              borderColor: '#3CB371',
+            }}
+          >
+            {refreshing ? (
+              <ActivityIndicator size={20} color="#3CB371" />
+            ) : (
+              <Icon name="refresh" size={22} color="#3CB371" />
+            )}
           </TouchableOpacity>
         </View>
       </SafeAreaView>

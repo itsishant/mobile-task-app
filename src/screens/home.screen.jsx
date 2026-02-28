@@ -152,7 +152,6 @@ export const HomeScreen = () => {
         if (!response || !response.data) throw new Error('Failed to save');
       }
       
-      // Refresh subscriptions from backend to get correct MongoDB ObjectIds
       await fetchSubscriptions();
       
       setFormData(initialFormData);
@@ -455,18 +454,6 @@ export const HomeScreen = () => {
               Loopify
             </Text>
           </View>
-          <TouchableOpacity onPress={handleLogout}>
-            <Icon
-              name="logout"
-              size={30}
-              color="#fff"
-              style={{
-                backgroundColor: '#b91c1c',
-                borderRadius: 20,
-                padding: 6,
-              }}
-            />
-          </TouchableOpacity>
         </View>
       </SafeAreaView>
 

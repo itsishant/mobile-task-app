@@ -8,7 +8,7 @@ const getConfig = (): AppConfig => {
 //https://loopify-fcbl.onrender.com/api/v1
 
   return {
-    DEV_URL: 'https://loopify-fcbl.onrender.com/api/v1'
+    DEV_URL: 'https://brian-jeffrey-tide-greg.trycloudflare.com/api/v1'
   };
 };
 

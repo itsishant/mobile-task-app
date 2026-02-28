@@ -3,29 +3,14 @@ import {
   Text,
   TouchableOpacity,
   View,
-  TextInput,
   Image,
 } from 'react-native';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const LandingScreen = () => {
   const navigate = useNavigation();
-
-  useEffect(() => {
-    const checkToken = async () => {
-      const token = await AsyncStorage.getItem('token');
-      if (token) {
-        console.log('token: ', token);
-        navigate.replace('MainTabs', {
-          screen: 'Home',
-        });
-      }
-    };
-    checkToken();
-  }, [navigate]);
 
   return (
     <SafeAreaView className="flex-1 min-h-screen justify-center items-center bg-black">

@@ -8,6 +8,9 @@ import { ProfileScreen } from '../screens/profile.screen.jsx';
 import { SearchScreen } from '../screens/search.screen.jsx';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useState, useEffect } from 'react';
+import { View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -57,8 +60,23 @@ export const MainTabs = () => {
 };
 
 export const AppNavigation = () => {
+  const [initialRoute, setInitialRoute] = useState(null);
+
+  useEffect(() => {
+    AsyncStorage.getItem('token').then(token => {
+      setInitialRoute(token ? 'MainTabs' : 'Landing');
+    });
+  }, []);
+
+  if (!initialRoute) {
+    return <View style={{ flex: 1, backgroundColor: '#09090b' }} />;
+  }
+
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName={initialRoute}
+    >
       <Stack.Screen name="Landing" component={LandingScreen} />
       <Stack.Screen name="Signup" component={SignupScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />

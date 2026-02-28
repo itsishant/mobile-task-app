@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-//
-
 import appConfig from '../../../config/app.config';
 
 const API_URL = appConfig.DEV_URL;
